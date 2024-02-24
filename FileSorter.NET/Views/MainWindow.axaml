@@ -1,0 +1,167 @@
+<Window
+    x:Class="FileSorter.NET.Views.MainWindow"
+    xmlns="https://github.com/avaloniaui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="using:FileSorter.NET.ViewModels"
+    x:Name="FileSorter"
+    Title="FileSorter.NET"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    Icon="/Assets/avalonia-logo.ico"
+    mc:Ignorable="d">
+
+    <Window.DataContext>
+        <vm:MainWindowViewModel />
+    </Window.DataContext>
+
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+            <ColumnDefinition Width="auto" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+            <RowDefinition Height="auto" />
+        </Grid.RowDefinitions>
+
+        <!--  Row 0  -->
+        <Border
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="5"
+            Background="{DynamicResource SystemControlBackgroundListLowBrush}"
+            BorderBrush="{DynamicResource SystemControlBackgroundListMediumBrush}"
+            BorderThickness="2">
+            <Grid>
+                <DataGrid
+                    CanUserReorderColumns="True"
+                    CanUserResizeColumns="True"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding FilesToCopy}"
+                    SelectionMode="Single">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Binding="{Binding FullName}"
+                            Header="Full Name"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding Extension}"
+                            Header="Extension"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding CreationTime}"
+                            Header="Creation Time"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding LastAccessTime}"
+                            Header="Last Access Time"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding Length}"
+                            Header="File Size"
+                            IsReadOnly="True" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
+
+        <!--  Row 1  -->
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Padding="10,0,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Text="Directory From:" />
+        <TextBox
+            Grid.Row="1"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Text="{Binding DirectoryFrom}" />
+        <Button
+            Grid.Row="1"
+            Grid.Column="3"
+            Margin="0,0,5,0"
+            Command="{Binding FromDirectoryCommand}"
+            CommandParameter="{Binding ElementName=FileSorter}"
+			ToolTip.Tip="Get From Directory">
+            <PathIcon Data="{StaticResource folder_add_regular}" />
+        </Button>
+        <Button
+            Grid.Row="1"
+            Grid.Column="4"
+            Command="{Binding OpenFromFolderCommand}"
+			ToolTip.Tip="Open From Directory">
+            <PathIcon Data="{StaticResource folder_open_regular}" />
+        </Button>
+
+        <!--  Row 2  -->
+        <TextBlock
+            Grid.Row="2"
+            Grid.Column="0"
+            Padding="10,0,0,0"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Center"
+            Text="Directory To:" />
+        <TextBox
+            Grid.Row="2"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Text="{Binding DirectoryTo}" />
+        <Button
+            Grid.Row="2"
+            Grid.Column="3"
+            Margin="0,0,5,0"
+            Command="{Binding ToDirectoryCommand}"
+            CommandParameter="{Binding ElementName=FileSorter}"
+			ToolTip.Tip="Get To Directory">
+            <PathIcon Data="{StaticResource folder_add_regular}" />
+        </Button>
+        <Button
+            Grid.Row="2"
+            Grid.Column="4"
+            Command="{Binding OpenToFolderCommand}"
+			ToolTip.Tip="Open To Directory">
+            <PathIcon Data="{StaticResource folder_open_regular}" />
+        </Button>
+
+        <!--  Row 3  -->
+        <ProgressBar
+            Grid.Row="3"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Margin="0,0,5,0"
+            Maximum="{Binding ProgressBarMax}"
+            Minimum="0"
+            ShowProgressText="True"
+            Value="{Binding ProgressBarValue}" />
+		<CheckBox
+			Margin="5,0,0,0"
+            Grid.Row="3"
+            Grid.Column="3"
+			HorizontalAlignment="Center"
+			VerticalAlignment="Center"
+			ToolTip.Tip="Use Custom Folder Structure"
+            IsChecked="{Binding UseCustomFolders}">
+		</CheckBox >
+        <Button
+            Grid.Row="3"
+            Grid.Column="4"
+            Command="{Binding SortFilesCommand}">
+            <PathIcon Data="{StaticResource checkmark_regular}" />
+        </Button>
+
+    </Grid>
+
+</Window>
