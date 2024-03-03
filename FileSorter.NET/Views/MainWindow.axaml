@@ -9,7 +9,7 @@
     Title="FileSorter.NET"
     d:DesignHeight="450"
     d:DesignWidth="800"
-    Icon="/Assets/avalonia-logo.ico"
+    Icon="/Assets/Logo.ico"
     mc:Ignorable="d">
 
     <Window.DataContext>
