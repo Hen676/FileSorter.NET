@@ -2,6 +2,7 @@
     x:Class="FileSorter.NET.Views.MainWindow"
     xmlns="https://github.com/avaloniaui"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:c="clr-namespace:FileSorter.NET.Converters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="using:FileSorter.NET.ViewModels"
@@ -9,14 +10,35 @@
     Title="FileSorter.NET"
     d:DesignHeight="450"
     d:DesignWidth="800"
+    ExtendClientAreaChromeHints="NoChrome"
+    ExtendClientAreaToDecorationsHint="True"
     Icon="/Assets/Logo.ico"
+    WindowStartupLocation="CenterOwner"
+    WindowState="Normal"
     mc:Ignorable="d">
 
     <Window.DataContext>
         <vm:MainWindowViewModel />
     </Window.DataContext>
 
-    <Grid Margin="5">
+    <Window.Resources>
+        <c:MaxmiseIconConverter x:Key="maxmiseIconConverter" />
+    </Window.Resources>
+
+    <Window.Styles>
+        <Style Selector="Window[WindowState=Maximized]">
+            <Setter Property="Padding" Value="8" />
+        </Style>
+        <Style Selector="Button.decorations">
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <Style Selector="TextBlock.footer">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+    </Window.Styles>
+
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="*" />
@@ -26,6 +48,7 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -33,11 +56,58 @@
             <RowDefinition Height="auto" />
         </Grid.RowDefinitions>
 
-        <!--  Row 0  -->
+        <!--  Menu Backgound - Row 0  -->
+        <StackPanel
+            Name="TopRow"
+            Grid.RowSpan="1"
+            Grid.ColumnSpan="10"
+            Background="{DynamicResource SystemControlBackgroundBaseLowBrush}" />
+        <!--  Menu - Row 0  -->
+        <Grid Grid.ColumnSpan="10" ColumnDefinitions="auto,auto,*,auto">
+            <Image
+                Width="25"
+                Margin="5,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Source="/Assets/Logo.png" />
+
+            <TextBlock
+                Grid.Column="1"
+				Margin="5,0,0,0"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                FontWeight="Bold"
+                Text="FileSorter" />
+
+            <StackPanel Grid.Column="3" Orientation="Horizontal">
+                <Button
+                    Classes="decorations"
+                    Command="{Binding MinimizeCommand}"
+                    CommandParameter="{Binding ElementName=FileSorter}">
+                    &#x1F5D5;
+                </Button>
+                <Button
+                    Classes="decorations"
+                    Command="{Binding MaximizeCommand}"
+                    CommandParameter="{Binding ElementName=FileSorter}"
+                    Content="{Binding RelativeSource={RelativeSource AncestorType=Window}, Path=WindowState, Converter={StaticResource maxmiseIconConverter}}">
+                    <!--  &#128470;  &#128471;  -->
+                </Button>
+                <Button
+                    Classes="decorations"
+                    Command="{Binding CloseCommand}"
+                    CommandParameter="{Binding ElementName=FileSorter}">
+                    &#x2715;
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!--  Row 1  -->
         <Border
-            Grid.Row="0"
+            Grid.Row="1"
             Grid.Column="0"
             Grid.ColumnSpan="5"
+            Margin="5"
             Background="{DynamicResource SystemControlBackgroundListLowBrush}"
             BorderBrush="{DynamicResource SystemControlBackgroundListMediumBrush}"
             BorderThickness="2">
@@ -74,90 +144,88 @@
             </Grid>
         </Border>
 
-        <!--  Row 1  -->
-        <TextBlock
-            Grid.Row="1"
-            Grid.Column="0"
-            Padding="10,0,0,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Text="Directory From:" />
-        <TextBox
-            Grid.Row="1"
-            Grid.Column="1"
-            Grid.ColumnSpan="2"
-            Margin="5"
-            Text="{Binding DirectoryFrom}" />
-        <Button
-            Grid.Row="1"
-            Grid.Column="3"
-            Margin="0,0,5,0"
-            Command="{Binding FromDirectoryCommand}"
-            CommandParameter="{Binding ElementName=FileSorter}"
-			ToolTip.Tip="Get From Directory">
-            <PathIcon Data="{StaticResource folder_add_regular}" />
-        </Button>
-        <Button
-            Grid.Row="1"
-            Grid.Column="4"
-            Command="{Binding OpenFromFolderCommand}"
-			ToolTip.Tip="Open From Directory">
-            <PathIcon Data="{StaticResource folder_open_regular}" />
-        </Button>
-
         <!--  Row 2  -->
         <TextBlock
             Grid.Row="2"
             Grid.Column="0"
             Padding="10,0,0,0"
-            HorizontalAlignment="Right"
-            VerticalAlignment="Center"
-            Text="Directory To:" />
+            Classes="footer"
+            Text="Directory From:" />
         <TextBox
             Grid.Row="2"
             Grid.Column="1"
             Grid.ColumnSpan="2"
             Margin="5"
-            Text="{Binding DirectoryTo}" />
+            Text="{Binding DirectoryFrom}" />
         <Button
             Grid.Row="2"
             Grid.Column="3"
             Margin="0,0,5,0"
-            Command="{Binding ToDirectoryCommand}"
+            Command="{Binding FromDirectoryCommand}"
             CommandParameter="{Binding ElementName=FileSorter}"
-			ToolTip.Tip="Get To Directory">
+            ToolTip.Tip="Get From Directory">
             <PathIcon Data="{StaticResource folder_add_regular}" />
         </Button>
         <Button
             Grid.Row="2"
             Grid.Column="4"
-            Command="{Binding OpenToFolderCommand}"
-			ToolTip.Tip="Open To Directory">
+            Command="{Binding OpenFromFolderCommand}"
+            ToolTip.Tip="Open From Directory">
             <PathIcon Data="{StaticResource folder_open_regular}" />
         </Button>
 
         <!--  Row 3  -->
-        <ProgressBar
+        <TextBlock
             Grid.Row="3"
             Grid.Column="0"
-            Grid.ColumnSpan="3"
+            Padding="10,0,0,0"
+            Classes="footer"
+            Text="Directory To:" />
+        <TextBox
+            Grid.Row="3"
+            Grid.Column="1"
+            Grid.ColumnSpan="2"
+            Margin="5"
+            Text="{Binding DirectoryTo}" />
+        <Button
+            Grid.Row="3"
+            Grid.Column="3"
             Margin="0,0,5,0"
+            Command="{Binding ToDirectoryCommand}"
+            CommandParameter="{Binding ElementName=FileSorter}"
+            ToolTip.Tip="Get To Directory">
+            <PathIcon Data="{StaticResource folder_add_regular}" />
+        </Button>
+        <Button
+            Grid.Row="3"
+            Grid.Column="4"
+            Command="{Binding OpenToFolderCommand}"
+            ToolTip.Tip="Open To Directory">
+            <PathIcon Data="{StaticResource folder_open_regular}" />
+        </Button>
+
+        <!--  Row 4  -->
+        <ProgressBar
+            Grid.Row="4"
+            Grid.Column="0"
+            Grid.ColumnSpan="3"
+            Margin="5,0,5,0"
             Maximum="{Binding ProgressBarMax}"
             Minimum="0"
             ShowProgressText="True"
             Value="{Binding ProgressBarValue}" />
-		<CheckBox
-			Margin="5,0,0,0"
-            Grid.Row="3"
+        <CheckBox
+            Grid.Row="4"
             Grid.Column="3"
-			HorizontalAlignment="Center"
-			VerticalAlignment="Center"
-			ToolTip.Tip="Use Custom Folder Structure"
-            IsChecked="{Binding UseCustomFolders}">
-		</CheckBox >
+            Margin="5,0,0,0"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            IsChecked="{Binding UseCustomFolders}"
+            ToolTip.Tip="Use Custom Folder Structure" />
         <Button
-            Grid.Row="3"
+            Grid.Row="4"
             Grid.Column="4"
+            Margin="0,0,5,5"
             Command="{Binding SortFilesCommand}">
             <PathIcon Data="{StaticResource checkmark_regular}" />
         </Button>
