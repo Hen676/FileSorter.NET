@@ -39,11 +39,6 @@ namespace FileSorter.NET.ViewModels
             get => _useCustomFolders;
             set => this.RaiseAndSetIfChanged(ref _useCustomFolders, value);
         }
-        public bool Maxmised
-        {
-            get => _maxmised;
-            set => this.RaiseAndSetIfChanged(ref _maxmised, value);
-        }
 
         public ReactiveCommand<Window, Unit> FromDirectoryCommand { get; }
         public ReactiveCommand<Window, Unit> ToDirectoryCommand { get; }
@@ -67,7 +62,6 @@ namespace FileSorter.NET.ViewModels
         private int _progressBarValue = 0;
         private int _progressBarMax = 0;
         private bool _useCustomFolders = false;
-        private bool _maxmised = false;
         #endregion
 
         public MainWindowViewModel()
@@ -79,7 +73,6 @@ namespace FileSorter.NET.ViewModels
             DirectoryFrom = _settingsSerivce.FromDirectory;
             DirectoryTo = _settingsSerivce.ToDirectory;
             UseCustomFolders = false;
-            Maxmised = false;
 
             CloseCommand = ReactiveCommand.Create<Window>(Close);
             MinimizeCommand = ReactiveCommand.Create<Window>(Minimize);
@@ -94,12 +87,7 @@ namespace FileSorter.NET.ViewModels
             AddFilesToListView();
         }
 
-        private void Maximize(Window window)
-        {
-            window.WindowState = Maxmised ? WindowState.Normal : WindowState.Maximized;
-            Maxmised = !Maxmised;
-        }
-
+        private void Maximize(Window window) => window.WindowState = (window.WindowState == WindowState.FullScreen || window.WindowState == WindowState.Maximized) ? WindowState.Normal : WindowState.Maximized;
         private void Minimize(Window window) => window.WindowState = WindowState.Minimized;
         private void Close(Window window) => window.Close();
         private void OpenFromFolder() => OpenFolder(DirectoryFrom);
