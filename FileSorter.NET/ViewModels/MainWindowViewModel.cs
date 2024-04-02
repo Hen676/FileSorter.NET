@@ -2,7 +2,6 @@
 using FileSorter.NET.Services;
 using ReactiveUI;
 using Splat;
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;

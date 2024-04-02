@@ -37,7 +37,7 @@ namespace FileSorter.NET.Services
 
             IReadOnlyList<IStorageFolder> responce = await topLevel.StorageProvider.OpenFolderPickerAsync(new FolderPickerOpenOptions
             {
-                Title = "TODO:: ADD TITLE",
+                Title = "Get Folder",
                 SuggestedStartLocation = await topLevel.StorageProvider.TryGetFolderFromPathAsync(path),
                 AllowMultiple = false
             });
